@@ -63,7 +63,7 @@ export function Solana() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount (SOL)</Label>
+              <Label htmlFor="amount">Amount(SOL)</Label>
               <Input
                 id="amount"
                 type="number"
