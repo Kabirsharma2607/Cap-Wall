@@ -1,37 +1,45 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2 } from "lucide-react"
-import toast, { Toaster } from "react-hot-toast"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
 
 export function Solana() {
-  const [sender, setSender] = useState("")
-  const [receiver, setReceiver] = useState("")
-  const [amount, setAmount] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [sender, setSender] = useState("");
+  const [receiver, setReceiver] = useState("");
+  const [amount, setAmount] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-
+    e.preventDefault();
+    setIsLoading(true);
+    const res = await axios.get("/api/getBalance");
+    console.log(res);
     // Simulate transaction process
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Simulate success/failure (50% chance of success)
-    const isSuccess = Math.random() < 0.5
+    const isSuccess = Math.random() < 0.5;
 
     if (isSuccess) {
-      toast.success("Transaction successful!")
+      toast.success("Transaction successful!");
     } else {
-      toast.error("Transaction failed. Please try again.")
+      toast.error("Transaction failed. Please try again.");
     }
-
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -92,5 +100,5 @@ export function Solana() {
       </Card>
       <Toaster position="bottom-center" />
     </div>
-  )
+  );
 }
