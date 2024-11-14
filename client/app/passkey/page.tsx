@@ -2,8 +2,6 @@
 
 import React, { useState } from "react";
 import { useRouter } from 'next/navigation';
-import { ToastProvider, Toast, ToastViewport } from '@radix-ui/react-toast';
-import { Button } from '@radix-ui/react-button';
 import toast, { Toaster } from "react-hot-toast";
 
 const generatePasskey = () => {
