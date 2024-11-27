@@ -1,0 +1,32 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Wallet {
+  id            String    @id @default(cuid())
+  type          String    // "SOL", "BTC", "PALO"
+  address       String    @unique
+  balance       Float     @default(0)
+  userId        String    // This will reference the Neo4j user ID
+  transactions  Transaction[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Transaction {
+  id            String    @id @default(cuid())
+  hash          String    @unique
+  amount        Float
+  type          String    // "SEND" or "RECEIVE"
+  status        String    // "PENDING", "COMPLETED", "FAILED"
+  fromWalletId  String
+  toAddress     String
+  fromWallet    Wallet    @relation(fields: [fromWalletId], references: [id])
+  createdAt     DateTime  @default(now())
+}
+
