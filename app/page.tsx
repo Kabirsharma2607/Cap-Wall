@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Logo } from '@/components/logo'
-import Link from 'next/link'
+import { motion } from "framer-motion";
+import { Logo } from "@/components/logo";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -50,13 +50,21 @@ export default function LandingPage() {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mt-12"
+          className="mt-12 gap-4 justify-center"
         >
           <Link
             href="/register"
             className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full text-white font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-200"
           >
             Join Us
+          </Link>
+          <Link
+            href="/login"
+            className="relative ml-8 px-8 py-3 border-2 border-cyan-500 text-cyan-500 rounded-full font-semibold transition-all duration-300 
+             before:absolute before:inset-0 before:bg-gradient-to-r before:from-cyan-500 before:to-blue-500 
+             before:opacity-0 hover:before:opacity-100 hover:text-white before:transition-opacity before:duration-300 before:rounded-full"
+          >
+            Login
           </Link>
         </motion.div>
 
@@ -68,18 +76,20 @@ export default function LandingPage() {
           className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl w-full"
         >
           {[
-            { number: '1.2M+', label: 'Active Users' },
-            { number: '$4.5B+', label: 'Transaction Volume' },
-            { number: '150+', label: 'Supported Coins' }
+            { number: "1.2M+", label: "Active Users" },
+            { number: "$4.5B+", label: "Transaction Volume" },
+            { number: "150+", label: "Supported Coins" },
           ].map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.2 + (index * 0.1) }}
+              transition={{ delay: 1.2 + index * 0.1 }}
               className="bg-white bg-opacity-80 backdrop-blur-sm rounded-xl shadow-lg border border-blue-100 p-6 text-center"
             >
-              <h3 className="text-3xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-transparent bg-clip-text">{stat.number}</h3>
+              <h3 className="text-3xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-transparent bg-clip-text">
+                {stat.number}
+              </h3>
               <p className="text-gray-600 mt-1">{stat.label}</p>
             </motion.div>
           ))}
@@ -92,48 +102,66 @@ export default function LandingPage() {
           transition={{ delay: 1.5 }}
           className="mt-24 max-w-5xl w-full pb-20"
         >
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">Why Choose <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-transparent bg-clip-text">CryptoWallet</span></h2>
-          
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
+            Why Choose{" "}
+            <span className="bg-gradient-to-r from-cyan-500 to-blue-500 text-transparent bg-clip-text">
+              CryptoWallet
+            </span>
+          </h2>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                title: 'Security First',
-                description: 'State-of-the-art encryption and multi-factor authentication keep your assets safe.'
+                title: "Security First",
+                description:
+                  "State-of-the-art encryption and multi-factor authentication keep your assets safe.",
               },
               {
-                title: 'Low Fees',
-                description: 'Enjoy minimal transaction fees and transparent pricing on all exchanges.'
+                title: "Low Fees",
+                description:
+                  "Enjoy minimal transaction fees and transparent pricing on all exchanges.",
               },
               {
-                title: 'Multi-Chain Support',
-                description: 'Seamlessly manage assets across different blockchain networks in one place.'
-              }
+                title: "Multi-Chain Support",
+                description:
+                  "Seamlessly manage assets across different blockchain networks in one place.",
+              },
             ].map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.5 + (index * 0.1) }}
+                transition={{ delay: 1.5 + index * 0.1 }}
                 className="bg-gradient-to-b from-white to-blue-50 rounded-2xl p-6 shadow-lg border border-blue-100 hover:shadow-xl hover:-translate-y-1 transition-all"
               >
                 <div className="w-12 h-12 mb-4 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center text-white">
                   {index + 1}
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{feature.title}</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                  {feature.title}
+                </h3>
                 <p className="text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
       </div>
-      
+
       {/* Add styles for animations */}
       <style jsx global>{`
         @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
+          0% {
+            transform: translate(0px, 0px) scale(1);
+          }
+          33% {
+            transform: translate(30px, -50px) scale(1.1);
+          }
+          66% {
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          100% {
+            transform: translate(0px, 0px) scale(1);
+          }
         }
         .animate-blob {
           animation: blob 7s infinite;
@@ -151,11 +179,18 @@ export default function LandingPage() {
           animation-delay: 4s;
         }
         .bg-grid-slate-100 {
-          background-image: linear-gradient(to right, rgb(241 245 249 / 0.1) 1px, transparent 1px),
-                            linear-gradient(to bottom, rgb(241 245 249 / 0.1) 1px, transparent 1px);
+          background-image: linear-gradient(
+              to right,
+              rgb(241 245 249 / 0.1) 1px,
+              transparent 1px
+            ),
+            linear-gradient(
+              to bottom,
+              rgb(241 245 249 / 0.1) 1px,
+              transparent 1px
+            );
         }
       `}</style>
     </div>
-  )
+  );
 }
-
