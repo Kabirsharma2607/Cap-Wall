@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Logo } from "@/components/logo";
-import { createTransaction, getTransactions } from "@/app/actions/transaction";
+import { createTransaction } from "@/app/actions/transaction";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -28,21 +28,21 @@ export default function WalletPage() {
         title: "Transaction initiated",
         description: "Your transaction has been submitted successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Transaction failed",
-        description: error.message,
+        description: error.message || "An error occurred",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <div className="min-h-screen bg-black flex">
+    <div className="min-h-screen bg-white flex">
       <motion.aside
         initial={{ x: -300, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className="w-64 bg-gray-900 p-4 flex flex-col"
+        className="w-64 bg-slate-100 border-slate-200 p-4 flex flex-col"
       >
         <div className="mb-8 flex justify-center">
           <Logo />
@@ -57,8 +57,8 @@ export default function WalletPage() {
               onClick={() => setSelectedCrypto(crypto)}
               className={`w-full px-4 py-2 rounded-lg text-left transition-colors ${
                 selectedCrypto === crypto
-                  ? "bg-gradient-to-r from-purple-600 to-orange-500 text-white"
-                  : "text-gray-400 hover:bg-gray-800"
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-500 text-white"
+                  : "text-gray-600 hover:bg-gray-200"
               }`}
             >
               {crypto}
@@ -74,16 +74,16 @@ export default function WalletPage() {
           className="max-w-4xl mx-auto"
         >
           <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-gray-800">
               {selectedCrypto} Wallet
             </h1>
             <Dialog>
               <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-purple-600 to-orange-500">
+                <Button className="bg-gradient-to-r from-cyan-500 to-blue-500">
                   Send {selectedCrypto}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] bg-gray-900 text-white">
+              <DialogContent className="sm:max-w-[425px] bg-white text-gray-800">
                 <DialogHeader>
                   <DialogTitle>Send {selectedCrypto}</DialogTitle>
                 </DialogHeader>
@@ -94,7 +94,7 @@ export default function WalletPage() {
                       type="number"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-gray-100 border-gray-300"
                     />
                   </div>
                   <div className="grid gap-2">
@@ -102,12 +102,12 @@ export default function WalletPage() {
                     <Input
                       value={toAddress}
                       onChange={(e) => setToAddress(e.target.value)}
-                      className="bg-gray-800 border-gray-700"
+                      className="bg-gray-100 border-gray-300"
                     />
                   </div>
                   <Button
                     onClick={handleTransaction}
-                    className="bg-gradient-to-r from-purple-600 to-orange-500"
+                    className="bg-gradient-to-r from-cyan-500 to-blue-500"
                   >
                     Send Transaction
                   </Button>
@@ -116,20 +116,20 @@ export default function WalletPage() {
             </Dialog>
           </div>
           <div className="space-y-6">
-            <div className="bg-gray-900 rounded-lg p-6">
+            <div className="bg-slate-100 rounded-lg p-6 shadow-lg border border-slate-200">
               <div className="grid grid-cols-2 gap-6">
-                <div className="p-4 bg-gray-800 rounded-lg">
-                  <h3 className="text-gray-400 mb-2">Balance</h3>
-                  <p className="text-2xl text-white">0.00 {selectedCrypto}</p>
+                <div className="p-4 bg-white rounded-lg">
+                  <h3 className="text-gray-600 mb-2">Balance</h3>
+                  <p className="text-2xl text-gray-800">0.00 {selectedCrypto}</p>
                 </div>
-                <div className="p-4 bg-gray-800 rounded-lg">
-                  <h3 className="text-gray-400 mb-2">Value (USD)</h3>
-                  <p className="text-2xl text-white">$0.00</p>
+                <div className="p-4 bg-white rounded-lg">
+                  <h3 className="text-gray-600 mb-2">Value (USD)</h3>
+                  <p className="text-2xl text-gray-800">$0.00</p>
                 </div>
               </div>
             </div>
-            <div className="bg-gray-900 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-white mb-4">
+            <div className="bg-slate-100 rounded-lg p-6 shadow-lg border border-slate-200">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 Recent Transactions
               </h2>
               <div className="space-y-4">
