@@ -1,83 +1,113 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { UserPlus } from "lucide-react"
 import { Logo } from '@/components/logo'
+import {SignupError} from "@/app/types"
+import axiosInstance from '@/lib/axios'
+import { useAppContext } from "@/lib/AppContext"
+import {AuthSchemaType} from "@kabir.26/uniwall-commons"
+import Cookies from 'js-cookie'
+
 
 const Signup =() => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-  })
+  const router = useRouter();
+  const {isLoggedIn , setIsLoggedIn , passKey , setPassKey} = useAppContext()
 
-  const [errors, setErrors] = useState({
-    username: "",
-    password: "",
-    confirmPassword: "",
-    form: "",
-  })
+  if(isLoggedIn){
+    router.push("/")
+  }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+  const handleSignupCLicked = async(formObj:  any) => {
+    try {
+      console.log("handle signup")
+      const body: AuthSchemaType = {
+        username: formObj.username,
+        password: formObj.password
+      }
+      console.log(body)
+      const res = await axiosInstance.post("/auth/signup", body
+      )
+      console.log(res)
 
-    // Clear error when user starts typing
-    if (errors[name as keyof typeof errors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }))
+      if(res.data.success){
+        if(res.data.token && res.data.wordsSecret){
+          Cookies.set('auth_token', res.data.token, { expires: 1, secure: true, sameSite: 'strict' });
+          setPassKey(res.data.wordsSecret)
+          setIsLoggedIn(true)
+          alert(res.data.message)
+          // router.push("/")
+        }
+      }
+      else{
+        alert(res.data.message)
+      }
+    } catch (error) {
+      
     }
   }
 
-  const validateForm = () => {
-    let isValid = true
-    const newErrors = {
+
+  const [errors, setErrors] = useState<SignupError | null>({
+    username: "",
+    password: "",
+    confirmPassword: "",
+  })
+
+
+  const validateForm = (formData: any): [boolean, SignupError] => {
+    let isValid = true 
+    
+    const errors: SignupError = {
       username: "",
       password: "",
       confirmPassword: "",
-      form: "",
     }
 
     if (!formData.username.trim()) {
-      newErrors.username = "Username is required"
+      errors.username = "Username is required"
       isValid = false
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      errors.password = "Password is required"
       isValid = false
     } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters"
+      errors.password = "Password must be at least 8 characters"
       isValid = false
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password"
+      errors.confirmPassword = "Please confirm your password"
       isValid = false
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+      errors.confirmPassword = "Passwords do not match"
       isValid = false
     }
 
-    setErrors(newErrors)
-    return isValid
+    return [isValid, errors]
   }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (validateForm()) {
-      // Handle successful signup
-      console.log("Form submitted:", formData)
-      // Here you would typically call your signup API
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const formObj = Object.fromEntries(formData.entries());
+
+    const res = validateForm(formObj)
+    if(res[0]){
+      handleSignupCLicked(formObj)
+      setErrors(null)
+    }else{
+      setErrors({
+        username: res[1].username,
+        password: res[1].password,
+        confirmPassword: res[1].confirmPassword,
+      })
     }
   }
 
@@ -89,7 +119,7 @@ const Signup =() => {
           <Logo/>
         </div>
 
-        <h1 className="text-2xl font-medium text-center text-blue-500 mb-8">Create Your Wallet</h1>
+        <h1 className="text-2xl font-semibold text-center text-blue-500 mb-8">Create Your Wallet</h1>
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -100,12 +130,10 @@ const Signup =() => {
               type="text"
               id="username"
               name="username"
-              value={formData.username}
-              onChange={handleChange}
               placeholder="Enter your username"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
-            {errors.username && <p className="mt-1 text-sm text-red-500">{errors.username}</p>}
+            {errors?.username && <p className="mt-1 text-sm text-red-500">{errors.username}</p>}
           </div>
 
           <div className="mb-4">
@@ -116,15 +144,13 @@ const Signup =() => {
               type="password"
               id="password"
               name="password"
-              value={formData.password}
-              onChange={handleChange}
               placeholder="Enter your password"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
-            {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
+            {errors?.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4">
             <label htmlFor="confirmPassword" className="block text-gray-700 mb-1">
               Confirm Password
             </label>
@@ -132,12 +158,10 @@ const Signup =() => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
               placeholder="Confirm your password"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
-            {errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>}
+            {errors?.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>}
           </div>
 
           <button
@@ -148,7 +172,6 @@ const Signup =() => {
             Sign Up
           </button>
 
-          {errors.form && <p className="mt-3 text-sm text-center text-red-500">{errors.form}</p>}
         </form>
 
         <div className="mt-6 text-center text-sm text-gray-600">

@@ -53,19 +53,18 @@ export default function LandingPage() {
           className="mt-12 gap-4 justify-center"
         >
           <Link
-            href="/register"
+            href="/signup"
             className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full text-white font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-200"
           >
             Join Us
           </Link>
           <Link
             href="/login"
-            className="relative ml-8 px-8 py-3 border-2 border-cyan-500 text-cyan-500 rounded-full font-semibold transition-all duration-300 
-             before:absolute before:inset-0 before:bg-gradient-to-r before:from-cyan-500 before:to-blue-500 
-             before:opacity-0 hover:before:opacity-100 hover:text-white before:transition-opacity before:duration-300 before:rounded-full"
-          >
-            Login
-          </Link>
+            className="relative ml-8 px-8 py-3 border-2 border-cyan-500 text-cyan-500 rounded-full font-semibold transition-all duration-300 before:transition-opacity before:duration-300 before:rounded-full before:-z-10
+    hover:before:opacity-100 hover:text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-500"
+>
+          Login
+        </Link>
         </motion.div>
 
         {/* Stats section */}
@@ -146,51 +145,6 @@ export default function LandingPage() {
           </div>
         </motion.div>
       </div>
-
-      {/* Add styles for animations */}
-      <style jsx global>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-1000 {
-          animation-delay: 1s;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-3000 {
-          animation-delay: 3s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        .bg-grid-slate-100 {
-          background-image: linear-gradient(
-              to right,
-              rgb(241 245 249 / 0.1) 1px,
-              transparent 1px
-            ),
-            linear-gradient(
-              to bottom,
-              rgb(241 245 249 / 0.1) 1px,
-              transparent 1px
-            );
-        }
-      `}</style>
     </div>
   );
 }
