@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
+// pages/_app.tsx
+import { SWRConfig } from "swr";
+import fetcher from "@/lib/fetcher";
+import { AppProvider } from "@/lib/AppContext";
+import { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { AppProvider } from "@/lib/AppContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -21,15 +24,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AppProvider>{children}</AppProvider>
+        <SWRConfig
+          value={{
+            fetcher, // Use fetcher directly in SWRConfig
+          }}
+        >
+          <AppProvider>{children}</AppProvider>
+        </SWRConfig>
       </body>
     </html>
   );
