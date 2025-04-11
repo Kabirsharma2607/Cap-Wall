@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { MotionHeading } from '@/components/ui/motion-heading'
 
 export default function RegisterPage() {
   const [name, setName] = useState('')
@@ -22,13 +23,9 @@ export default function RegisterPage() {
         animate={{ scale: 1, opacity: 1 }}
         className="w-full max-w-md"
       >
-        <motion.h2
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-2xl text-center text-gray-800 mb-8"
-        >
+        <MotionHeading>
           What should we call you?
-        </motion.h2>
+        </MotionHeading>
         <form onSubmit={handleSubmit} className="space-y-4">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
