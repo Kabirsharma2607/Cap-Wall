@@ -2,20 +2,17 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
 type AppContextType = {
-  isLoggedIn: boolean;
-  setIsLoggedIn: (value: boolean) => void;
-  passKey: string[] | null;
-  setPassKey: (keys: string[] | null) => void;
+  username: string;
+  setUsername: (value: string) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [passKey, setPassKey] = useState<string[] | null>(null);
+  const [username, setUsername] = useState('');
 
   return (
-    <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn, passKey, setPassKey }}>
+    <AppContext.Provider value={{ username , setUsername }}>
       {children}
     </AppContext.Provider>
   );

@@ -15,11 +15,7 @@ import Cookies from 'js-cookie'
 
 const Signup =() => {
   const router = useRouter();
-  const {isLoggedIn , setIsLoggedIn , passKey , setPassKey} = useAppContext()
 
-  if(isLoggedIn){
-    router.push("/")
-  }
 
   const handleSignupCLicked = async(formObj:  any) => {
     try {
@@ -36,10 +32,8 @@ const Signup =() => {
       if(res.data.success){
         if(res.data.token && res.data.wordsSecret){
           Cookies.set('auth_token', res.data.token, { expires: 1, secure: true, sameSite: 'strict' });
-          setPassKey(res.data.wordsSecret)
-          setIsLoggedIn(true)
           alert(res.data.message)
-          // router.push("/")
+          // router.push("/recovery" , {state: {wordsSecret: res.data.wordsSecret}})
         }
       }
       else{
@@ -112,7 +106,7 @@ const Signup =() => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+    <div className="flex justify-center items-center min-h-screen bg-transparent">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-sm">
 
         <div className="flex justify-center mb-6">

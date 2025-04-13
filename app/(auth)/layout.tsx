@@ -3,7 +3,7 @@ import React from 'react';
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => { 
 
     return (
-        <div>
+        <div className='bg-gray-50 w-full'>
             {children}
         </div>
     );

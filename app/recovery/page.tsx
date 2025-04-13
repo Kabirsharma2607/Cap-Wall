@@ -1,20 +1,34 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Check } from 'lucide-react'
+import axiosInstance from '@/lib/axios'
+
 
 export default function RecoveryPage() {
   const [copied, setCopied] = useState(false)
   const router = useRouter()
+  const [wordsSecret , setWordsSecret] = useState<string[]>([])
   
-  const recoveryPhrase = Array(20).fill(0).map(() => 
-    Math.random().toString(36).substring(2, 6)
-  )
+
+  useEffect(() => {
+    const getWordsSecret = async () => {
+      try {
+        const res = await axiosInstance.get('/auth/words-secret/nishtha')
+        console.log(res);
+        setWordsSecret(res.data.data)
+      } catch (error) {
+        
+      }
+    }
+
+    getWordsSecret();
+  } , [])
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(recoveryPhrase.join(' '))
+    navigator.clipboard.writeText(wordsSecret.join(' '))
     setCopied(true)
     setTimeout(() => router.push('/select-wallet'), 1000)
   }
@@ -39,7 +53,7 @@ export default function RecoveryPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-4 gap-3 p-6 bg-slate-100 shadow-lg border border-slate-200 rounded-lg mb-6"
         >
-          {recoveryPhrase.map((word, index) => (
+          {wordsSecret.map((word, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
