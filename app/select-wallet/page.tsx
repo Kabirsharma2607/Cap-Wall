@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import { MotionHeading } from '@/components/ui/motion-heading'
 
 const wallets = ['Solana', 'Bitcoin', 'Palo', 'Polygon']
 
@@ -15,13 +16,9 @@ export default function SelectWalletPage() {
         animate={{ scale: 1, opacity: 1 }}
         className="w-full max-w-md"
       >
-        <motion.h2
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-2xl text-center text-gray-800 mb-8"
-        >
+        <MotionHeading>
           Choose which wallets you want
-        </motion.h2>
+        </MotionHeading>
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Check } from 'lucide-react'
 import axiosInstance from '@/lib/axios'
 
+import { MotionHeading } from '@/components/ui/motion-heading'
 
 export default function RecoveryPage() {
   const [copied, setCopied] = useState(false)
@@ -40,13 +41,9 @@ export default function RecoveryPage() {
         animate={{ scale: 1, opacity: 1 }}
         className="w-full max-w-lg text-center"
       >
-        <motion.h2
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-2xl text-red-500 mb-8"
-        >
+        <MotionHeading className="text-2xl text-red-500 mb-8">
           Warning: if you forget this your existence is a waste
-        </motion.h2>
+        </MotionHeading>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
