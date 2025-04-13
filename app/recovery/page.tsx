@@ -1,36 +1,25 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Check } from 'lucide-react'
 import axiosInstance from '@/lib/axios'
-
+import { useAppContext } from '@/lib/AppContext'
 import { MotionHeading } from '@/components/ui/motion-heading'
+import { useRecoveryPhrase } from '@/lib/swr'
 
 export default function RecoveryPage() {
   const [copied, setCopied] = useState(false)
   const router = useRouter()
-  const [wordsSecret , setWordsSecret] = useState<string[]>([])
-  
+  const {username} = useAppContext();
+  const {data,error,isLoading,isValidating,mutate} = useRecoveryPhrase(username);
 
-  useEffect(() => {
-    const getWordsSecret = async () => {
-      try {
-        const res = await axiosInstance.get('/auth/words-secret/nishtha')
-        console.log(res);
-        setWordsSecret(res.data.data)
-      } catch (error) {
-        
-      }
-    }
 
-    getWordsSecret();
-  } , [])
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(wordsSecret.join(' '))
+  const handleCopy = async () => {
+    navigator.clipboard.writeText(data.data.join(' '))
     setCopied(true)
+    // await axiosInstance.patch()
     setTimeout(() => router.push('/select-wallet'), 1000)
   }
 
@@ -50,7 +39,7 @@ export default function RecoveryPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-4 gap-3 p-6 bg-slate-100 shadow-lg border border-slate-200 rounded-lg mb-6"
         >
-          {wordsSecret.map((word, index) => (
+          {data.data.map((word : string, index : number) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}

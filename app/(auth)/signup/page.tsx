@@ -14,9 +14,10 @@ import Cookies from "js-cookie";
 
 const Signup = () => {
   const router = useRouter();
+  const { setUsername } = useAppContext();
 
 
-  const handleSignupCLicked = async (formObj: any) => {
+  const handleSignupClicked = async (formObj: any) => {
     try {
       console.log("handle signup");
       const body: AuthSchemaType = {
@@ -31,7 +32,8 @@ const Signup = () => {
         if(res.data.token && res.data.wordsSecret){
           Cookies.set('auth_token', res.data.token, { expires: 1, secure: true, sameSite: 'strict' });
           alert(res.data.message)
-          // router.push("/recovery" , {state: {wordsSecret: res.data.wordsSecret}})
+          setUsername(formObj.username);
+          router.push("/recovery")
         }
       } else {
         alert(res.data.message);
@@ -56,6 +58,9 @@ const Signup = () => {
 
     if (!formData.username.trim()) {
       errors.username = "Username is required";
+      isValid = false;
+    }else if(formData.username.trim().length < 6){
+      errors.username = "Username must be at least 6 characters";
       isValid = false;
     }
 
@@ -87,7 +92,7 @@ const Signup = () => {
 
     const res = validateForm(formObj);
     if (res[0]) {
-      handleSignupCLicked(formObj);
+      handleSignupClicked(formObj);
       setErrors(null);
     } else {
       setErrors({
