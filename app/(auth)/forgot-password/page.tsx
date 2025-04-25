@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Logo } from '@/components/logo'
-import axiosInstance from '@/lib/axios'
+// import axiosInstance from '@/lib/axios'
 import Link from 'next/link'
 import { KeyRound } from 'lucide-react'
 
@@ -21,8 +21,8 @@ interface ResetPasswordFormData {
   newPassword: string
 }
 
-export default function ForgetPasswordPage() {
-  const router = useRouter()
+export default function ForgotPasswordPage() {
+  // const router = useRouter()
   const [errors, setErrors] = useState<ResetPasswordError | null>({
     username: '',
     wordsecret: '',
@@ -37,15 +37,15 @@ export default function ForgetPasswordPage() {
         newPassword: formObj.newPassword
       }
       
-    //   const res = await axiosInstance.post("/auth/reset-password", body)
-      
-    //   if (res.status === 200) {
-    //     alert("Password reset successful")
-    //     router.push('/login')
-    //   } else {
-    //     alert("Password reset failed")
-    //   }
-    console.log(body)
+      //   const res = await axiosInstance.post("/auth/reset-password", body)
+        
+      //   if (res.status === 200) {
+      //     alert("Password reset successful")
+      //     router.push('/login')
+      //   } else {
+      //     alert("Password reset failed")
+      //   }
+      console.log(body)
     } catch (error) {
       console.log(error)
       alert("Failed to reset password. Please check your details.")
