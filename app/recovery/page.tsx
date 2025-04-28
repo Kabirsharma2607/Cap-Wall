@@ -15,6 +15,14 @@ export default function RecoveryPage() {
   const {username} = useAppContext();
   const {data,error,isLoading,isValidating,mutate} = useRecoveryPhrase(username);
 
+  if(isLoading){
+    return <div>Loading...</div>
+  }
+
+  if(error){
+    return <div>Error: {error.message}</div>
+  }
+
 
   const handleCopy = async () => {
     navigator.clipboard.writeText(data.data.join(' '))

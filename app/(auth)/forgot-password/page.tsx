@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 // import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,12 +13,14 @@ interface ResetPasswordError {
   username: string
   wordsecret: string
   newPassword: string
+  confirmPassword: string
 }
 
 interface ResetPasswordFormData {
   username: string
   wordsecret: string
   newPassword: string
+  confirmPassword: string
 }
 
 export default function ForgotPasswordPage() {
@@ -26,8 +28,76 @@ export default function ForgotPasswordPage() {
   const [errors, setErrors] = useState<ResetPasswordError | null>({
     username: '',
     wordsecret: '',
-    newPassword: ''
+    newPassword: '',
+    confirmPassword: ''
   })
+  
+  // Create state for the 24 word secret inputs
+  const [wordSecrets, setWordSecrets] = useState<string[]>(Array(24).fill(''));
+  const inputRefs = useRef<(HTMLInputElement | null)[]>(Array(24).fill(null));
+  
+  // Function to handle input changes and auto-focus
+  const handleWordSecretChange = (index: number, value: string) => {
+    if (value.length > 4) {
+      value = value.slice(0, 4);
+    }
+    
+    const newWordSecrets = [...wordSecrets];
+    newWordSecrets[index] = value;
+    setWordSecrets(newWordSecrets);
+    
+    // Auto-focus to next input if current input has 4 characters
+    if (value.length === 4 && index < 23) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+  
+  // Function to handle paste event
+  const handlePaste = (index: number, e: React.ClipboardEvent) => {
+    e.preventDefault();
+    const pastedText = e.clipboardData.getData('text');
+    
+    // Check if pasted content contains spaces or looks like multiple words
+    if (pastedText.includes(' ')) {
+      // Split the pasted text by spaces
+      const words = pastedText.trim().split(/\s+/);
+      
+      // If we have enough words to fill the grid, use them
+      if (words.length >= 24) {
+        const newWordSecrets = [...wordSecrets];
+        
+        // Fill all boxes with pasted words (up to 4 chars each)
+        for (let i = 0; i < 24 && i < words.length; i++) {
+          newWordSecrets[i] = words[i].slice(0, 4);
+        }
+        
+        setWordSecrets(newWordSecrets);
+        
+        // Focus the last input after populating all
+        if (inputRefs.current[23]) {
+          inputRefs.current[23].focus();
+        }
+      } else {
+        // If not enough words, just paste in current input
+        handleWordSecretChange(index, pastedText.slice(0, 4));
+      }
+    } else {
+      // If it's just a single word, handle normally
+      handleWordSecretChange(index, pastedText.slice(0, 4));
+    }
+  };
+  
+  // Function to handle backspace key
+  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
+    if (e.key === 'Backspace' && wordSecrets[index] === '' && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+  
+  // Function to combine all inputs into a single string
+  const combineWordSecrets = () => {
+    return wordSecrets.join('');
+  };
 
   const handleResetPassword = async(formObj: ResetPasswordFormData) => {
     try {
@@ -52,12 +122,13 @@ export default function ForgotPasswordPage() {
     }
   }
 
-  const validateForm = (formData: Record<string, string>): [boolean, ResetPasswordError] => {
+  const validateForm = (formData: Record<string, string>, wordSecretArray: string[]): [boolean, ResetPasswordError] => {
     let isValid = true
     const errors: ResetPasswordError = {
       username: "",
       wordsecret: "",
-      newPassword: ""
+      newPassword: "",
+      confirmPassword: ""
     }
     
     if (!formData.username.trim()) {
@@ -65,25 +136,41 @@ export default function ForgotPasswordPage() {
       isValid = false
     }
   
-    if (!formData.wordsecret.trim()) {
-      errors.wordsecret = "Word secret is required"
-      isValid = false
-    } else if (formData.wordsecret.length !== 24) {
-      errors.wordsecret = "Word secret must be exactly 24 characters"
-      isValid = false
-    } else if (!/^[a-zA-Z0-9]+$/.test(formData.wordsecret)) {
-      errors.wordsecret = "Word secret must contain only letters and numbers"
-      isValid = false
-    } else if (!/[a-zA-Z]/.test(formData.wordsecret) || !/[0-9]/.test(formData.wordsecret)) {
-      errors.wordsecret = "Word secret must contain a mix of letters and numbers"
+    // Validate word secret inputs
+    const emptyInputs = wordSecretArray.some(word => word.length === 0);
+    const invalidInputs = wordSecretArray.some(word => word.length !== 4);
+    
+    if (emptyInputs || invalidInputs) {
+      errors.wordsecret = "All word secret fields must contain exactly 4 characters each"
       isValid = false
     }
+    
+    // Validate the combined word secret
+    // const combinedSecret = wordSecretArray.join('');
+    // if (!/^[a-zA-Z0-9]+$/.test(combinedSecret)) {
+    //   errors.wordsecret = "Word secret must contain only letters and numbers"
+    //   isValid = false
+    // } else if (!/[a-zA-Z]/.test(combinedSecret) || !/[0-9]/.test(combinedSecret)) {
+    //   errors.wordsecret = "Word secret must contain a mix of letters and numbers"
+    //   isValid = false
+    // }
     
     if (!formData.newPassword) {
       errors.newPassword = "New password is required"
       isValid = false
-    } else if (formData.newPassword.length < 6) {
-      errors.newPassword = "Password must be at least 6 characters"
+    } else if (formData.newPassword.length < 8) {
+      errors.newPassword = "Password must be at least 8 characters"
+      isValid = false
+    }
+    
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = "Confirm password is required"
+      isValid = false
+    } else if (formData.confirmPassword !== formData.newPassword) {
+      errors.confirmPassword = "Passwords do not match"
+      isValid = false
+    } else if (formData.confirmPassword.length < 8) {
+      errors.confirmPassword = "Password must be at least 8 characters"
       isValid = false
     }
     
@@ -96,13 +183,18 @@ export default function ForgotPasswordPage() {
     const formData = new FormData(form);
     const formValues = Object.fromEntries(formData.entries()) as Record<string, string>;
     
+    // Add the combined word secret to form values
+    const combinedWordSecret = combineWordSecrets();
+    formValues.wordsecret = combinedWordSecret;
+    
     const formObj: ResetPasswordFormData = {
       username: formValues.username || '',
-      wordsecret: formValues.wordsecret || '',
-      newPassword: formValues.newPassword || ''
+      wordsecret: combinedWordSecret,
+      newPassword: formValues.newPassword || '',
+      confirmPassword: formValues.confirmPassword || ''
     };
 
-    const [isValid, validationErrors] = validateForm(formValues)
+    const [isValid, validationErrors] = validateForm(formValues, wordSecrets)
     if(isValid) {
       handleResetPassword(formObj)
       setErrors(null)
@@ -110,6 +202,37 @@ export default function ForgotPasswordPage() {
       setErrors(validationErrors)
     }
   }
+
+  // Create a grid of 6 rows with 4 inputs per row
+  const renderWordSecretInputs = () => {
+    const rows = [];
+    for (let row = 0; row < 6; row++) {
+      const inputs = [];
+      for (let col = 0; col < 4; col++) {
+        const index = row * 4 + col;
+        inputs.push(
+          <div key={index} className="px-1">
+            <Input
+              ref={(el) => { inputRefs.current[index] = el; }}
+              value={wordSecrets[index]}
+              onChange={(e) => handleWordSecretChange(index, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(index, e)}
+              onPaste={(e) => handlePaste(index, e)}
+              maxLength={4}
+              className="w-full py-2 px-2 text-center bg-gray-200 rounded text-gray-700 font-mono text-sm"
+              placeholder={`----`}
+            />
+          </div>
+        );
+      }
+      rows.push(
+        <div key={row} className="flex gap-1 mb-2">
+          {inputs}
+        </div>
+      );
+    }
+    return rows;
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-transparent">
@@ -141,16 +264,12 @@ export default function ForgotPasswordPage() {
             </div>
             
             <div className='mb-4 mt-4'>
-              <label htmlFor="wordsecret" className="block text-gray-700 mb-1">
+              <label className="block text-gray-700 mb-1">
                 Word Secret
               </label>
-              <Input
-                id="wordsecret"
-                name="wordsecret"
-                type="text"
-                className="w-full px-3 py-5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                placeholder="Enter your word secret"
-              />
+              <div className="grid grid-cols-1 gap-2 p-4 bg-slate-100 shadow-sm border border-slate-200 rounded-lg">
+                {renderWordSecretInputs()}
+              </div>
               {errors?.wordsecret && (
                 <p className="text-red-500 text-xs mt-1">{errors.wordsecret}</p>
               )}
@@ -169,6 +288,22 @@ export default function ForgotPasswordPage() {
               />
               {errors?.newPassword && (
                 <p className="text-red-500 text-xs mt-1">{errors.newPassword}</p>
+              )}
+            </div>
+
+            <div className='mb-4 mt-4'>
+              <label htmlFor="confirmPassword" className="block text-gray-700 mb-1">
+                Confirm Password
+              </label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                className="w-full px-3 py-5 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                placeholder="Confirm your new password"
+              />
+              {errors?.confirmPassword && (
+                <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>
               )}
             </div>
 
