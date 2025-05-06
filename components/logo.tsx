@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 export function Logo() {
   return (
     <motion.div
-      className="relative w-12 h-12 md:w-16 md:h-16"
+      className="relative w-12 h-12 md:w-12 md:h-12"
       initial={{ scale: 0 }}
       animate={{ scale: 1, rotate: 360 }}
       transition={{ type: "spring", duration: 1.5 }}

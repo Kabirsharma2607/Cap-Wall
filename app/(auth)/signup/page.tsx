@@ -7,15 +7,16 @@ import { useRouter } from "next/navigation";
 import { UserPlus } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { SignupError } from "@/app/types";
-import axiosInstance from "@/lib/axios";
 import { useAppContext } from "@/lib/AppContext";
 import { AuthSchemaType } from "@kabir.26/uniwall-commons";
-import Cookies from "js-cookie";
+import axios from "axios";
+// import Cookies from "js-cookie";
+import toast from "react-hot-toast";
+import axiosInstance from "@/lib/axios";
 
 const Signup = () => {
   const router = useRouter();
   const { setUsername } = useAppContext();
-
 
   const handleSignupClicked = async (formObj: any) => {
     try {
@@ -28,17 +29,22 @@ const Signup = () => {
       const res = await axiosInstance.post("/auth/signup", body);
       console.log(res);
 
-      if(res.data.success){
-        if(res.data.token && res.data.wordsSecret){
-          Cookies.set('auth_token', res.data.token, { expires: 1, secure: true, sameSite: 'strict' });
-          alert(res.data.message)
+      if (res.data.success) {
+        if (res.data.token && res.data.wordsSecret) {
+          localStorage.setItem("token", res.data.token);
           setUsername(formObj.username);
-          router.push("/recovery")
+          toast.success(res.data.message);
+          setTimeout(() => {
+            router.push("/recovery");
+          }, 2000);
         }
       } else {
-        alert(res.data.message);
+        toast.error(res.data.message);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast.error("Failed to sign up. Please try again.");
+    }
   };
 
   const [errors, setErrors] = useState<SignupError | null>({
@@ -59,7 +65,7 @@ const Signup = () => {
     if (!formData.username.trim()) {
       errors.username = "Username is required";
       isValid = false;
-    }else if(formData.username.trim().length < 6){
+    } else if (formData.username.trim().length < 6) {
       errors.username = "Username must be at least 6 characters";
       isValid = false;
     }

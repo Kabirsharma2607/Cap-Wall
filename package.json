@@ -9,10 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@kabir.26/uniwall-commons": "^1.0.5",
+    "@kabir.26/uniwall-commons": "^1.0.8",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-dialog": "^1.1.2",
-    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-slot": "^1.2.0",
     "@radix-ui/react-toast": "^1.2.2",
     "@types/bcrypt": "^5.0.2",
     "@types/js-cookie": "^3.0.6",
@@ -30,6 +30,7 @@
     "next-auth": "^4.24.10",
     "react": "^18",
     "react-dom": "^18",
+    "react-hot-toast": "^2.5.2",
     "swr": "^2.3.3",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"

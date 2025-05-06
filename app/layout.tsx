@@ -4,6 +4,7 @@ import fetcher from "@/lib/fetcher";
 import { AppProvider } from "@/lib/AppContext";
 import { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -35,9 +36,14 @@ export default function RootLayout({
             fetcher, // Use fetcher directly in SWRConfig
           }}
         >
-          <AppProvider>{children}</AppProvider>
+          <AppProvider>
+            {children}  
+            <Toaster position="top-center" />
+          </AppProvider>
         </SWRConfig>
       </body>
     </html>
   );
 }
+
+
