@@ -30,13 +30,19 @@ const Signup = () => {
       console.log(res);
 
       if (res.data.success) {
-        if (res.data.token && res.data.wordsSecret) {
+        if (res.data.token) {
+          localStorage.removeItem("token");
           localStorage.setItem("token", res.data.token);
           setUsername(formObj.username);
           toast.success(res.data.message);
-          setTimeout(() => {
-            router.push("/recovery");
-          }, 2000);
+
+          await new Promise((resolve) =>
+            resolve(
+              setTimeout(() => {
+                router.push("/recovery");
+              }, 2000)
+            )
+          );
         }
       } else {
         toast.error(res.data.message);

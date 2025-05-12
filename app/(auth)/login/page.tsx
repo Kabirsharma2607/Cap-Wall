@@ -32,8 +32,8 @@ export default function LoginPage() {
       const res = await axiosInstance.post("/auth/login", body);
 
       if (res.data && res.data.token) {
+        localStorage.removeItem("token");
         localStorage.setItem("token", res.data.token);
-        // Redirect to the dashboard or home page
         setUsername(formObj.username);
         toast.success("Login successful");
         setTimeout(() => {

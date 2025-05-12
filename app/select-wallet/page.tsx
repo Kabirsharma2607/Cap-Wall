@@ -18,8 +18,6 @@ export default function SelectWalletPage() {
 
   const { data, error, isLoading, isValidating, mutate } = useElegibleWallets();
 
-  console.log(data);
-
   const toggleWallet = useCallback(
     (walletType: WalletType) => {
       console.log("toggleWallet called");
@@ -40,7 +38,7 @@ export default function SelectWalletPage() {
         wallets: selectedWallets,
       });
       if (res.data.success) {
-        router.push("/show-wallet");
+        router.push(res.data.deeplink);
       }
     } catch (e) {}
   }, [router, selectedWallets]);
