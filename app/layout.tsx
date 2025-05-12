@@ -1,5 +1,10 @@
-import type { Metadata } from "next";
+// pages/_app.tsx
+import { SWRConfig } from "swr";
+import fetcher from "@/lib/fetcher";
+import { AppProvider } from "@/lib/AppContext";
+import { Metadata } from "next";
 import localFont from "next/font/local";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -20,16 +25,25 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <SWRConfig
+          value={{
+            fetcher, // Use fetcher directly in SWRConfig
+          }}
+        >
+          <AppProvider>
+            {children}  
+            <Toaster position="top-center" />
+          </AppProvider>
+        </SWRConfig>
       </body>
     </html>
   );
 }
+
+
