@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { Logo } from "@/components/logo";
-import { createTransaction, getTransactions } from "@/app/actions/transaction";
+import { createTransaction } from "@/app/actions/transaction";
 import { useToast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -28,10 +28,11 @@ export default function WalletPage() {
         title: "Transaction initiated",
         description: "Your transaction has been submitted successfully",
       });
-    } catch (error) {
+    } catch (e) {
+      console.error(e);
       toast({
         title: "Transaction failed",
-        description: error.message,
+        description: "An error occurred while processing your transaction",
         variant: "destructive",
       });
     }

@@ -1,20 +1,24 @@
-import { driver } from './neo4j'
-import { hash, compare } from 'bcrypt'
+import { driver } from "./neo4j";
+import { hash } from "bcrypt";
 
 export interface User {
-  id: string
-  email: string
-  name: string
-  password: string
+  id: string;
+  email: string;
+  name: string;
+  password: string;
 }
 
 export class UserService {
-  async createUser(email: string, password: string, name: string): Promise<User> {
-    const session = driver.session()
-    const hashedPassword = await hash(password, 10)
+  async createUser(
+    email: string,
+    password: string,
+    name: string
+  ): Promise<User> {
+    const session = driver.session();
+    const hashedPassword = await hash(password, 10);
 
     try {
-      const result = await session.executeWrite(tx =>
+      const result = await session.executeWrite((tx) =>
         tx.run(
           `
           CREATE (u:User {
@@ -27,20 +31,20 @@ export class UserService {
           `,
           { email, password: hashedPassword, name }
         )
-      )
+      );
 
-      const user = result.records[0].get('u').properties
-      return user as User
+      const user = result.records[0].get("u").properties;
+      return user as User;
     } finally {
-      await session.close()
+      await session.close();
     }
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
-    const session = driver.session()
+    const session = driver.session();
 
     try {
-      const result = await session.executeRead(tx =>
+      const result = await session.executeRead((tx) =>
         tx.run(
           `
           MATCH (u:User {email: $email})
@@ -48,23 +52,23 @@ export class UserService {
           `,
           { email }
         )
-      )
+      );
 
       if (result.records.length === 0) {
-        return null
+        return null;
       }
 
-      return result.records[0].get('u').properties as User
+      return result.records[0].get("u").properties as User;
     } finally {
-      await session.close()
+      await session.close();
     }
   }
 
   async addFriend(userId: string, friendId: string, nickname?: string) {
-    const session = driver.session()
+    const session = driver.session();
 
     try {
-      await session.executeWrite(tx =>
+      await session.executeWrite((tx) =>
         tx.run(
           `
           MATCH (u:User {id: $userId})
@@ -74,17 +78,17 @@ export class UserService {
           `,
           { userId, friendId, nickname }
         )
-      )
+      );
     } finally {
-      await session.close()
+      await session.close();
     }
   }
 
   async getFriends(userId: string) {
-    const session = driver.session()
+    const session = driver.session();
 
     try {
-      const result = await session.executeRead(tx =>
+      const result = await session.executeRead((tx) =>
         tx.run(
           `
           MATCH (u:User {id: $userId})-[r:FRIENDS_WITH]->(f:User)
@@ -92,17 +96,16 @@ export class UserService {
           `,
           { userId }
         )
-      )
+      );
 
-      return result.records.map(record => ({
-        ...record.get('f').properties,
-        nickname: record.get('nickname')
-      }))
+      return result.records.map((record) => ({
+        ...record.get("f").properties,
+        nickname: record.get("nickname"),
+      }));
     } finally {
-      await session.close()
+      await session.close();
     }
   }
 }
 
-export const userService = new UserService()
-
+export const userService = new UserService();
