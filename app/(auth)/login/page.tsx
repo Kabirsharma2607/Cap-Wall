@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/logo";
 import { AuthSchemaType } from "@kabir.26/uniwall-commons";
-import { LoginError } from "@/app/types";
+import { LoginForm } from "@/app/types";
 import Link from "next/link";
 import { useAppContext } from "@/lib/AppContext";
 import { UserPlus } from "lucide-react";
@@ -16,12 +16,12 @@ import axiosInstance from "@/lib/axios";
 export default function LoginPage() {
   const router = useRouter();
   const { setUsername } = useAppContext();
-  const [errors, setErrors] = useState<LoginError | null>({
+  const [errors, setErrors] = useState<LoginForm | null>({
     username: "",
     password: "",
   });
 
-  const handleLoginCLicked = async (formObj?: any) => {
+  const handleLoginCLicked = async (formObj: LoginForm) => {
     try {
       console.log("handle login");
       const body: AuthSchemaType = {
@@ -48,9 +48,9 @@ export default function LoginPage() {
     }
   };
 
-  const validateForm = (formData: any): [boolean, LoginError] => {
+  const validateForm = (formData: LoginForm): [boolean, LoginForm] => {
     let isValid = true;
-    const errors: LoginError = {
+    const errors: LoginForm = {
       username: "",
       password: "",
     };
@@ -75,9 +75,15 @@ export default function LoginPage() {
     const formObj = Object.fromEntries(formData.entries());
     console.log(formObj);
 
-    const res = validateForm(formObj);
+    const res = validateForm({
+      username: formObj.username as string,
+      password: formObj.password as string,
+    });
     if (res[0]) {
-      handleLoginCLicked(formObj);
+      handleLoginCLicked({
+        username: formObj.username as string,
+        password: formObj.password as string,
+      });
       setErrors(null);
     } else {
       setErrors({

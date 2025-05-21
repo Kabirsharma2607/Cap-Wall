@@ -1,8 +1,8 @@
 "use client";
 import axios from "axios";
 
-// const BASE_URL = "http://localhost:3000/api/v1";
-const BASE_URL = "https://light-terms-stand.loca.lt/api/v1";
+const BASE_URL = "http://localhost:3000/api/v1";
+// const BASE_URL = "https://kabirsh.loca.lt/api/v1";
 
 const getAuthToken = () => {
   if (typeof window !== "undefined") {
@@ -22,15 +22,10 @@ const fetcher = async (url: string) => {
         Authorization: token ? `Bearer ${token}` : "",
       },
     });
+    console.log(response, "response in fetcher");
     return response.data;
-  } catch (error: any) {
-    // Handle errors and throw with extra information
-    console.log(error);
-    const err = new Error("Error fetching data");
-    err.info = error.response ? error.response.data : null;
-    err.status = error.response ? error.response.status : null;
-    throw err;
-  }
+    //@ts-ignore
+  } catch (e) {}
 };
 
 export default fetcher;

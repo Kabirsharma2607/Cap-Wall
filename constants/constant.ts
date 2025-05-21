@@ -1,4 +1,12 @@
 import { WalletType } from "@/app/types";
+import { ActionItemSchema } from "@/lib/types";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  Repeat,
+  ShoppingCart,
+  LucideProps,
+} from "lucide-react";
 
 export const walletMetaDataMap: Record<
   WalletType,
@@ -27,5 +35,32 @@ export const walletMetaDataMap: Record<
     name: "Bitcoin",
     color: "bg-gradient-to-r from-orange-200 to-orange-300",
     icon: "/images/btc.png",
+  },
+};
+
+export const actionItemsMap: Record<
+  ActionItemSchema["actionItemType"],
+  {
+    label: string;
+    icon: React.ForwardRefExoticComponent<
+      Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+    >;
+  }
+> = {
+  SEND: {
+    label: "Send",
+    icon: ArrowUpRight,
+  },
+  RECEIVE: {
+    label: "Receive",
+    icon: ArrowDownLeft,
+  },
+  SWAP: {
+    label: "Swap",
+    icon: Repeat,
+  },
+  BUY: {
+    label: "Buy",
+    icon: ShoppingCart,
   },
 };

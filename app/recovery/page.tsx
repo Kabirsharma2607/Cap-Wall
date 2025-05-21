@@ -14,11 +14,14 @@ export default function RecoveryPage() {
   const [copied, setCopied] = useState(false);
   const router = useRouter();
   const { username } = useAppContext();
-  const { data, error, isLoading, isValidating, mutate } =
-    useRecoveryPhrase(username);
+  const { data, error, isLoading } = useRecoveryPhrase(username);
 
   const handleCopyPhraseClicked = useCallback(async () => {
-    navigator.clipboard.writeText(data?.data.join(" "));
+    if (!data?.data) {
+      toast.error("No recovery phrase available");
+      return;
+    }
+    navigator.clipboard.writeText(data?.data?.join(" "));
     setCopied(true);
     toast.success("Recovery phrase copied to clipboard");
     if (username) {
@@ -29,13 +32,12 @@ export default function RecoveryPage() {
         if (res.data.success) {
           setTimeout(() => router.push("/select-wallet"), 2000);
         }
-      } catch (e) {}
+        //@ts-ignore
+      } catch (e) {
+        toast.error("Failed to update user state");
+      }
     }
   }, [data?.data, router, username]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   if (error) {
     return <div>Error: {error.message}</div>;
@@ -48,7 +50,7 @@ export default function RecoveryPage() {
     return null;
   }
 
-  if (isLoading) {
+  if (isLoading || !data) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-gray-600">Loading recovery phrase...</div>
@@ -70,7 +72,7 @@ export default function RecoveryPage() {
         className="w-full max-w-lg text-center"
       >
         <MotionHeading className="text-2xl text-red-500 mb-8">
-          Warning: if you forget this your existence is a waste
+          Warning: do not loose this phrase!
         </MotionHeading>
         <motion.div
           initial={{ opacity: 0 }}
@@ -78,7 +80,7 @@ export default function RecoveryPage() {
           transition={{ delay: 0.2 }}
           className="grid grid-cols-4 gap-3 p-6 bg-slate-100 shadow-lg border border-slate-200 rounded-lg mb-6"
         >
-          {data.data.map((word: string, index: number) => (
+          {data?.data?.map((word: string, index: number) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}

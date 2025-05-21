@@ -109,10 +109,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@kabir.26/uniwall-commons@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@kabir.26/uniwall-commons/-/uniwall-commons-1.0.8.tgz#3e607dfaa631ebfbf7928a28a6c3dc72928cf0ac"
-  integrity sha512-CF7gbaHqBdT/lLKpmfkV562WOMJqp4xwDIQRsgASx83tkK+muXu8GHWwmdwCPPeuoVUwcaIpBkVnnEjmUH1Eyg==
+"@kabir.26/uniwall-commons@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@kabir.26/uniwall-commons/-/uniwall-commons-1.0.10.tgz#9b141331515a409ca2d738fe3d0e529d19a87985"
+  integrity sha512-Yjek8P65En7OAkweJ7UxVvn8Hfdt9OhPvec0DpWULhln1q9aqcJ+pAtjSIvwNk/uOGST9AR6T9c/Dh2o5hwFDg==
   dependencies:
     zod "^3.24.2"
 
@@ -1903,11 +1903,6 @@ globalthis@^1.0.4:
     define-properties "^1.2.1"
     gopd "^1.0.1"
 
-goober@^2.1.16:
-  version "2.1.16"
-  resolved "https://registry.yarnpkg.com/goober/-/goober-2.1.16.tgz#7d548eb9b83ff0988d102be71f271ca8f9c82a95"
-  integrity sha512-erjk19y1U33+XAMe1VTvIONHYoSqE4iS7BYUZfHaqeohLmnC0FdxEh7rQU+6MZ4OajItzjZFSRtVANrQwNq6/g==
-
 globby@^11.1.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.1.0.tgz#bd4be98bb042f83d796f7e3811991fbe82a0d34b"
@@ -1919,6 +1914,11 @@ globby@^11.1.0:
     ignore "^5.2.0"
     merge2 "^1.4.1"
     slash "^3.0.0"
+
+goober@^2.1.16:
+  version "2.1.16"
+  resolved "https://registry.yarnpkg.com/goober/-/goober-2.1.16.tgz#7d548eb9b83ff0988d102be71f271ca8f9c82a95"
+  integrity sha512-erjk19y1U33+XAMe1VTvIONHYoSqE4iS7BYUZfHaqeohLmnC0FdxEh7rQU+6MZ4OajItzjZFSRtVANrQwNq6/g==
 
 gopd@^1.0.1:
   version "1.0.1"

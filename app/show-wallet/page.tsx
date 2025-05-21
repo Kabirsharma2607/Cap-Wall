@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -12,13 +12,24 @@ import { WalletType } from "../types";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/lib/axios";
+import { useAppContext } from "@/lib/AppContext";
 
 export default function WalletKeysPage() {
   const router = useRouter();
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
-  const { data, error, isLoading, isValidating, mutate } = useWallets();
+  const { data, isLoading, isValidating } = useWallets();
+  const { username } = useAppContext();
 
-  if (isLoading && !data) {
+  console.log(username, "username in wallet keys page");
+
+  useEffect(() => {
+    if (data && username) {
+      axiosInstance.patch(`/auth/update-user-state/${username}`);
+    }
+  }, [data, username]);
+
+  if (isLoading || !data || isValidating) {
     return (
       <div className="flex items-center justify-center h-screen">
         <p className="text-lg">Loading...</p>
@@ -61,7 +72,7 @@ export default function WalletKeysPage() {
         color: "#fff",
       },
     });
-    router.push(data?.deeplink);
+    router.push(data?.deeplink ?? "/");
   };
 
   console.log(walletMetaDataMap[WalletType.SOL]);
@@ -71,7 +82,7 @@ export default function WalletKeysPage() {
       <h1 className="text-3xl font-bold text-center mb-8">Your Wallet Keys</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-        {data?.data.map((wallet, index) => (
+        {data?.data?.map((wallet, index) => (
           <div
             key={index}
             className="card-container"
@@ -88,14 +99,14 @@ export default function WalletKeysPage() {
                   clsx(
                     `card-face card-front 
                   shadow-lg backdrop-blur-md flex items-center justify-center p-6`,
-                    walletMetaDataMap[wallet.wallet_type].color
+                    walletMetaDataMap[wallet.walletType].color
                   )
                 )}
               >
                 <div className="w-24 h-24 relative drop-shadow-2xl">
                   <Image
-                    src={walletMetaDataMap[wallet.wallet_type].icon}
-                    alt={`${wallet.wallet_type} logo`}
+                    src={walletMetaDataMap[wallet.walletType].icon}
+                    alt={`${wallet.walletType} logo`}
                     className="w-full h-full object-contain filter drop-shadow-xl"
                     height={96}
                     width={96}
@@ -107,7 +118,7 @@ export default function WalletKeysPage() {
               <div className="card-face card-back bg-white/90 shadow-lg backdrop-blur-md p-6">
                 <div className="flex flex-col h-full justify-between">
                   <h3 className="text-xl font-bold text-center mb-2">
-                    {wallet.wallet_type} Keys
+                    {wallet.walletType} Keys
                   </h3>
 
                   <div className="space-y-4">
@@ -123,7 +134,7 @@ export default function WalletKeysPage() {
                           onClick={(e) => {
                             e.stopPropagation();
                             copyToClipboard(
-                              wallet.wallet_address,
+                              wallet.walletPublicAddress,
                               "Public key"
                             );
                           }}
@@ -132,7 +143,7 @@ export default function WalletKeysPage() {
                         </Button>
                       </div>
                       <div className="bg-gray-100 p-2 rounded text-xs font-mono break-all">
-                        {wallet.wallet_address}
+                        {wallet.walletPublicAddress}
                       </div>
                     </div>
 
@@ -148,7 +159,7 @@ export default function WalletKeysPage() {
                           onClick={(e) => {
                             e.stopPropagation();
                             copyToClipboard(
-                              wallet.wallet_private_key,
+                              wallet.walletPrivateKey,
                               "Private key"
                             );
                           }}
@@ -157,7 +168,7 @@ export default function WalletKeysPage() {
                         </Button>
                       </div>
                       <div className="bg-gray-100 p-2 rounded text-xs font-mono break-all">
-                        {wallet.wallet_private_key}
+                        {wallet.walletPrivateKey}
                       </div>
                     </div>
                   </div>

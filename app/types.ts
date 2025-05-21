@@ -1,12 +1,12 @@
-export type SignupError = {
+export type LoginForm = {
+  username: string;
+  password: string;
+};
+
+export type SignupForm = {
   username: string;
   password: string;
   confirmPassword: string;
-};
-
-export type LoginError = {
-  username: string;
-  password: string;
 };
 
 export enum WalletType {

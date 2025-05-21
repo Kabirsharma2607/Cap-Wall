@@ -4,19 +4,21 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { MotionHeading } from "@/components/ui/motion-heading";
 import CheckboxItem from "@/components/CheckboxItem";
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { WalletType } from "@kabir.26/uniwall-commons";
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/lib/axios";
 import { useElegibleWallets } from "@/lib/swr";
+import { useAppContext } from "@/lib/AppContext";
 
 export default function SelectWalletPage() {
+  const { username } = useAppContext();
   const router = useRouter();
 
   const [selectedWallets, setSelectedWallets] = useState<WalletType[]>([]);
 
-  const { data, error, isLoading, isValidating, mutate } = useElegibleWallets();
+  const { data, isLoading, isValidating } = useElegibleWallets();
 
   const toggleWallet = useCallback(
     (walletType: WalletType) => {
@@ -34,12 +36,16 @@ export default function SelectWalletPage() {
   const handleButtonClick = useCallback(async () => {
     try {
       console.log(selectedWallets);
+      if (username) {
+        axiosInstance.patch(`/auth/update-user-state/${username}`);
+      }
       const res = await axiosInstance.post("/wallet/select-wallet", {
         wallets: selectedWallets,
       });
       if (res.data.success) {
         router.push(res.data.deeplink);
       }
+      //@ts-ignore
     } catch (e) {}
   }, [router, selectedWallets]);
 
@@ -62,10 +68,9 @@ export default function SelectWalletPage() {
     [data]
   );
 
-  if (isLoading) {
+  if (isLoading || !data || isValidating) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <Logo />
         <p className="text-gray-500">Loading...</p>
       </div>
     );
@@ -88,7 +93,7 @@ export default function SelectWalletPage() {
           transition={{ delay: 0.2 }}
           className="space-y-3"
         >
-          {data.data?.map((wallet, index) => (
+          {data.data?.map((wallet: WalletType) => (
             <CheckboxItem
               key={wallet}
               handleToggle={() => toggleWallet(wallet)}

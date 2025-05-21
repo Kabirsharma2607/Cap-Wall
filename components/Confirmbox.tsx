@@ -1,45 +1,71 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { LockIcon } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { walletMetaDataMap } from "@/constants/constant";
+import axiosInstance from "@/lib/axios";
+import { WalletBalanceType } from "@/lib/types";
+import { SendCoinSchema, WalletType } from "@kabir.26/uniwall-commons";
+import { LockIcon } from "lucide-react";
 import Image from "next/image";
-
-interface CryptoOption {
-  symbol: string;
-  name: string;
-  image: string;
-}
-
-const cryptoOptions: CryptoOption[] = [
-  { symbol: "ETH", name: "Ethereum", image: "/images/eth.png" },
-  { symbol: "BTC", name: "Bitcoin", image: "/images/btc.png" },
-  { symbol: "SOL", name: "Solana", image: "/images/sol.png" },
-  { symbol: "PALO", name: "Palo", image: "/images/palo.png" },
-]
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 interface ConfirmSendProps {
   address: string;
-  cryptoType: string;
-  amount: number;
-  setConfirmSend: React.Dispatch<React.SetStateAction<boolean>>;
+  data: {
+    success: boolean;
+    message: string;
+    balances: WalletBalanceType[];
+  };
+  cryptoType: WalletType | null;
+  amount: string;
+  setConfirmSend: (value: boolean) => void;
 }
 
 export default function ConfirmSend({
-  setConfirmSend, 
-  address, 
-  cryptoType, 
+  setConfirmSend,
+  address,
+  cryptoType,
   amount,
+  data,
 }: ConfirmSendProps) {
   const networkFee =
-    cryptoType === "ETH" ? "0.00007" :
-    cryptoType === "BTC" ? "0.00001" :
-    cryptoType === "SOL" ? "0.000001" :
-    "0.00005";
+    cryptoType === "ETH"
+      ? "0.00007"
+      : cryptoType === "BTC"
+      ? "0.00001"
+      : cryptoType === "SOL"
+      ? "0.000001"
+      : "0.00005";
 
-  const currentCrypto = cryptoOptions.find(crypto => crypto.symbol === cryptoType) || cryptoOptions[0];
+  const router = useRouter();
+
+  const currentCrypto =
+    data.balances.find((c) => c.walletType === cryptoType) || data.balances[0];
 
   const handleCancel = () => {
     setConfirmSend(false);
+  };
+
+  const handleConfirmSend = async () => {
+    if (!cryptoType) return;
+    const body: SendCoinSchema = {
+      receiverPublicAddress: address,
+      amount: amount,
+      walletType: cryptoType,
+    };
+
+    const res = await axiosInstance.post("/wallet/send-coin", body);
+
+    console.log(res);
+    if (res.data.signature) {
+      toast.success(res.data.message);
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 2000);
+    } else {
+      toast.error(res.data.message);
+    }
   };
 
   return (
@@ -53,7 +79,12 @@ export default function ConfirmSend({
 
       <div className="flex justify-center mb-4">
         <div className="w-12 h-12 bg-[#627dea6e] rounded-full flex items-center justify-center shadow-sm">
-          <Image src={currentCrypto.image} alt={`${currentCrypto.name} logo`} width={32} height={32}/>
+          <Image
+            src={walletMetaDataMap[currentCrypto.walletType].icon}
+            alt={walletMetaDataMap[currentCrypto.walletType].name}
+            width={32}
+            height={32}
+          />
         </div>
       </div>
 
@@ -62,7 +93,8 @@ export default function ConfirmSend({
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">To</span>
             <span className="font-medium">
-              {address.substring(0, 6)}...{address.substring(address.length - 6)}
+              {address.substring(0, 6)}...
+              {address.substring(address.length - 6)}
             </span>
           </div>
           <div className="flex justify-between text-sm">
@@ -73,7 +105,9 @@ export default function ConfirmSend({
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Network</span>
-            <span className="font-medium">{currentCrypto.name} Network</span>
+            <span className="font-medium">
+              {walletMetaDataMap[currentCrypto.walletType].name} Network
+            </span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Network Fee</span>
@@ -85,7 +119,12 @@ export default function ConfirmSend({
       </div>
 
       <div className="flex gap-3 mt-5">
-        <Button type="button" variant="outline" className="w-[25%] border-[#3F75E0] text-[#3F75E0]" onClick={handleCancel}>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-[25%] border-[#3F75E0] text-[#3F75E0]"
+          onClick={handleCancel}
+        >
           <svg
             width="16"
             height="16"
@@ -94,10 +133,17 @@ export default function ConfirmSend({
             xmlns="http://www.w3.org/2000/svg"
             className="mr-1"
           >
-            <path d="M8 16L9.41 14.59L3.83 9H16V7H3.83L9.41 1.41L8 0L0 8L8 16Z" fill="#3F75E0" />
+            <path
+              d="M8 16L9.41 14.59L3.83 9H16V7H3.83L9.41 1.41L8 0L0 8L8 16Z"
+              fill="#3F75E0"
+            />
           </svg>
         </Button>
-        <Button type="button" className="w-[75%] bg-[#3F75E0] hover:bg-[#3F75E0]/90">
+        <Button
+          type="button"
+          className="w-[75%] bg-[#3F75E0] hover:bg-[#3F75E0]/90"
+          onClick={handleConfirmSend}
+        >
           Confirm
         </Button>
       </div>
@@ -109,5 +155,5 @@ export default function ConfirmSend({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,8 +1,8 @@
 export const stats = [
-  { number: "1.2M+", label: "Active Users" },
-  { number: "$4.5B+", label: "Transaction Volume" },
-  { number: "150+", label: "Supported Coins" },
-]
+  { number: "6", label: "Beta Users" },
+  { number: "50+", label: "API Request Handled" },
+  { number: "4", label: "Supported Coins" },
+];
 
 export const features = [
   {
@@ -20,4 +20,4 @@ export const features = [
     description:
       "Seamlessly manage assets across different blockchain networks in one place.",
   },
-] 
+];

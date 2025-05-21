@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@kabir.26/uniwall-commons": "^1.0.8",
+    "@kabir.26/uniwall-commons": "^1.0.10",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-slot": "^1.2.0",

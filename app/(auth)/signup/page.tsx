@@ -6,11 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserPlus } from "lucide-react";
 import { Logo } from "@/components/logo";
-import { SignupError } from "@/app/types";
+import { SignupForm } from "@/app/types";
 import { useAppContext } from "@/lib/AppContext";
 import { AuthSchemaType } from "@kabir.26/uniwall-commons";
-import axios from "axios";
-// import Cookies from "js-cookie";
 import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
 
@@ -18,7 +16,7 @@ const Signup = () => {
   const router = useRouter();
   const { setUsername } = useAppContext();
 
-  const handleSignupClicked = async (formObj: any) => {
+  const handleSignupClicked = async (formObj: SignupForm) => {
     try {
       console.log("handle signup");
       const body: AuthSchemaType = {
@@ -53,16 +51,16 @@ const Signup = () => {
     }
   };
 
-  const [errors, setErrors] = useState<SignupError | null>({
+  const [errors, setErrors] = useState<SignupForm | null>({
     username: "",
     password: "",
     confirmPassword: "",
   });
 
-  const validateForm = (formData: any): [boolean, SignupError] => {
+  const validateForm = (formData: SignupForm): [boolean, SignupForm] => {
     let isValid = true;
 
-    const errors: SignupError = {
+    const errors: SignupForm = {
       username: "",
       password: "",
       confirmPassword: "",
@@ -102,9 +100,17 @@ const Signup = () => {
     const formData = new FormData(form);
     const formObj = Object.fromEntries(formData.entries());
 
-    const res = validateForm(formObj);
+    const res = validateForm({
+      username: formObj.username as string,
+      password: formObj.password as string,
+      confirmPassword: formObj.confirmPassword as string,
+    });
     if (res[0]) {
-      handleSignupClicked(formObj);
+      handleSignupClicked({
+        username: formObj.username as string,
+        password: formObj.password as string,
+        confirmPassword: formObj.confirmPassword as string,
+      });
       setErrors(null);
     } else {
       setErrors({

@@ -2,7 +2,15 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 
-const TransactionContent = ({ children }: { children: React.ReactNode }) => {
+const TransactionContent = ({
+  children,
+  title,
+  description,
+}: {
+  children: React.ReactNode;
+  title: string;
+  description: string;
+}) => {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <Header />
@@ -11,14 +19,13 @@ const TransactionContent = ({ children }: { children: React.ReactNode }) => {
         {/* Left Side */}
         <div className="flex flex-col flex-1 justify-center">
           <h1 className="text-6xl md:text-8xl font-bold leading-tight md:leading-[1.1]">
-            <span className="text-[#3F75E0]">Send</span>
+            <span className="text-[#3F75E0]">{title}</span>
             <br />
             <span className="text-black">Crypto Instantly</span>
           </h1>
 
           <p className="text-gray-600 mt-6 mb-10 text-xl md:text-2xl max-w-xl">
-            Transfer digital assets securely to anyone, anywhere in the world
-            fast and fee efficient.
+            {description}
           </p>
 
           <div className="flex gap-4">
