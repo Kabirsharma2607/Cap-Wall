@@ -7,7 +7,6 @@ import {
   ArrowUpRight,
   Repeat,
   ShoppingCart,
-  Clock,
   Plus,
 } from "lucide-react";
 import Image from "next/image";
@@ -17,13 +16,23 @@ import { useDashboardData } from "@/lib/swr";
 import { ActionItemSchema, WalletDetailsSchema } from "@/lib/types";
 import { walletMetaDataMap } from "@/constants/constant";
 import toast from "react-hot-toast";
+import { useAppContext } from "@/lib/AppContext";
 
 export default function Dashboard() {
   const router = useRouter();
+  const { username } = useAppContext();
+
+  if (!username) {
+    router.replace("/login");
+  }
   const { data, isLoading, isValidating, mutate } = useDashboardData();
 
   if (isLoading || !data || isValidating) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
   }
 
   const actionItemsMap: Record<
@@ -151,13 +160,6 @@ export default function Dashboard() {
             >
               <RefreshCcw className="w-4 h-4" />
               <span>Refresh Balance</span>
-            </button>
-            <button
-              onClick={() => console.log("Viewing recent transactions...")}
-              className="border border-[#3F75E0] text-[#3F75E0] rounded-full px-6 py-2 flex items-center gap-2 text-sm hover:bg-[#3F75E0]/10 transition-colors"
-            >
-              <Clock className="w-4 h-4" />
-              <span>Recent Transaction</span>
             </button>
           </div>
         </div>

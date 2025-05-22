@@ -21,7 +21,9 @@ export default function WalletKeysPage() {
   const { data, isLoading, isValidating } = useWallets();
   const { username } = useAppContext();
 
-  console.log(username, "username in wallet keys page");
+  if (!username) {
+    router.replace("/login");
+  }
 
   useEffect(() => {
     if (data && username) {

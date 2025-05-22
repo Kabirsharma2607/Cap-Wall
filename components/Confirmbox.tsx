@@ -58,7 +58,7 @@ export default function ConfirmSend({
     const res = await axiosInstance.post("/wallet/send-coin", body);
 
     console.log(res);
-    if (res.data.signature) {
+    if (res.data.signature === "" || res.data.signature) {
       toast.success(res.data.message);
       setTimeout(() => {
         router.push("/dashboard");

@@ -17,12 +17,18 @@ import { walletMetaDataMap } from "@/constants/constant";
 import { BuyCoinSchema, WalletType } from "@kabir.26/uniwall-commons";
 import axiosInstance from "@/lib/axios";
 import toast from "react-hot-toast";
+import { useAppContext } from "@/lib/AppContext";
 
 const Buy = () => {
   const [cryptoDialogOpen, setCryptoDialogOpen] = useState<boolean>(false);
   const [cryptoType, setCryptoType] = useState<WalletType | null>(null);
   const [amount, setAmount] = useState<string>("0");
   const router = useRouter();
+  const { username } = useAppContext();
+
+  if (!username) {
+    router.replace("/login");
+  }
 
   const { data, isLoading } = useConversionRates();
 
@@ -66,12 +72,12 @@ const Buy = () => {
     const res = await axiosInstance.post("/wallet/buy-coin", body);
 
     if (res.data.success) {
-      toast.success(res.data.message);
+      toast.success("Transaction successfull");
       setTimeout(() => {
         router.push("/dashboard");
       }, 2000);
     } else {
-      toast.error(res.data.message);
+      toast.error("Transaction Failed");
     }
   };
 

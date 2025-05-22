@@ -7,6 +7,8 @@ import Confirmbox from "@/components/Confirmbox";
 import TransactionContent from "@/components/TransactionContent";
 import { useUserWalletsWithBalances } from "@/lib/swr";
 import { WalletType } from "@kabir.26/uniwall-commons";
+import { useAppContext } from "@/lib/AppContext";
+import { useRouter } from "next/navigation";
 
 const Send = () => {
   const [confirmSend, setConfirmSend] = useState<boolean>(false);
@@ -14,6 +16,12 @@ const Send = () => {
   const [cryptoType, setCryptoType] = useState<WalletType | null>(null);
   const [amount, setAmount] = useState<string>("0");
   const { data, isLoading } = useUserWalletsWithBalances();
+  const { username } = useAppContext();
+  const router = useRouter();
+
+  if (!username) {
+    router.replace("/login");
+  }
 
   useEffect(() => {
     if (data && data.balances.length > 0) {
@@ -23,7 +31,11 @@ const Send = () => {
   }, [data]);
 
   if (isLoading || !data) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center p-4">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    );
   }
 
   return (

@@ -63,9 +63,15 @@ export function LandingPage() {
             href="/login"
             className="relative ml-8 px-8 py-3 border-2 border-cyan-500 text-cyan-500 rounded-full font-semibold transition-all duration-300 before:transition-opacity before:duration-300 before:rounded-full before:-z-10
     hover:before:opacity-100 hover:text-white hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-500"
->
-          Login
-        </Link>
+          >
+            Login
+          </Link>
+          <Link
+            href="/tutorial"
+            className="relative ml-8 px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full text-white font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-blue-200"
+          >
+            Tutorial
+          </Link>
         </motion.div>
 
         {/* Stats section */}
@@ -128,4 +134,4 @@ export function LandingPage() {
       </div>
     </div>
   );
-} 
+}

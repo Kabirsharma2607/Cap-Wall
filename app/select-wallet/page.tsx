@@ -15,8 +15,11 @@ import { useAppContext } from "@/lib/AppContext";
 export default function SelectWalletPage() {
   const { username } = useAppContext();
   const router = useRouter();
-
   const [selectedWallets, setSelectedWallets] = useState<WalletType[]>([]);
+
+  if (!username) {
+    router.replace("/login");
+  }
 
   const { data, isLoading, isValidating } = useElegibleWallets();
 
@@ -47,7 +50,7 @@ export default function SelectWalletPage() {
       }
       //@ts-ignore
     } catch (e) {}
-  }, [router, selectedWallets]);
+  }, [router, selectedWallets, username]);
 
   const getWalletName = useCallback(
     (walletType: WalletType) => {

@@ -12,10 +12,19 @@ import { useReceiveData } from "@/lib/swr";
 import { WalletType } from "@kabir.26/uniwall-commons";
 import { walletMetaDataMap } from "@/constants/constant";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useAppContext } from "@/lib/AppContext";
 
 export default function CryptoReceive() {
   const [cryptoDialogOpen, setCryptoDialogOpen] = useState(false);
   const [selectedCrypto, setSelectedCrypto] = useState<WalletType | null>(null);
+  const { username } = useAppContext();
+  const router = useRouter();
+
+  if (!username) {
+    router.replace("/login");
+  }
+
   const { data, isLoading } = useReceiveData();
 
   useEffect(() => {

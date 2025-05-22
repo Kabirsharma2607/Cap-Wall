@@ -14,8 +14,8 @@ import toast from "react-hot-toast";
 import axiosInstance from "@/lib/axios";
 
 export default function LoginPage() {
-  const router = useRouter();
   const { setUsername } = useAppContext();
+  const router = useRouter();
   const [errors, setErrors] = useState<LoginForm | null>({
     username: "",
     password: "",
@@ -34,6 +34,7 @@ export default function LoginPage() {
       if (res.data && res.data.token) {
         localStorage.removeItem("token");
         localStorage.setItem("token", res.data.token);
+        sessionStorage.setItem("username", formObj.username);
         setUsername(formObj.username);
         toast.success("Login successful");
         setTimeout(() => {
@@ -154,6 +155,13 @@ export default function LoginPage() {
               <UserPlus className="w-5 h-5" />
               Sign In
             </Button>
+
+            <div className="mt-6 text-center text-sm text-gray-600">
+              Create an account?{" "}
+              <Link href="/signup" className="text-blue-500 hover:underline">
+                Sign Up
+              </Link>
+            </div>
           </div>
         </form>
       </div>

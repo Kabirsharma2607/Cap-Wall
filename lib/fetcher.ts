@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const BASE_URL = "http://localhost:3000/api/v1";
-// const BASE_URL = "https://kabirsh.loca.lt/api/v1";
+// const BASE_URL = "https://plenty-pumas-report.loca.lt/api/v1";
 
 const getAuthToken = () => {
   if (typeof window !== "undefined") {

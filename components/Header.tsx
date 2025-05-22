@@ -21,7 +21,10 @@ export default function Header() {
       </button>
 
       {/* Right: Profile Button */}
-      <button className="bg-[#3F75E0] text-white px-6 py-2 rounded-full flex items-center gap-2 text-base">
+      <button
+        className="bg-[#3F75E0] text-white px-6 py-2 rounded-full flex items-center gap-2 text-base"
+        onClick={() => router.push("/profile")}
+      >
         <span>Profile</span>
       </button>
     </div>

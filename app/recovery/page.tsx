@@ -14,6 +14,13 @@ export default function RecoveryPage() {
   const [copied, setCopied] = useState(false);
   const router = useRouter();
   const { username } = useAppContext();
+
+  console.log("username in recovery", username);
+
+  if (!username) {
+    router.replace("/login");
+  }
+
   const { data, error, isLoading } = useRecoveryPhrase(username);
 
   const handleCopyPhraseClicked = useCallback(async () => {
@@ -43,12 +50,12 @@ export default function RecoveryPage() {
     return <div>Error: {error.message}</div>;
   }
 
-  if (!username) {
-    console.error("No username found in context");
-    toast.error("Session expired. Please sign up again.");
-    router.push("/signup");
-    return null;
-  }
+  // if (!username) {
+  //   console.error("No username found in context");
+  //   toast.error("Session expired. Please sign up again.");
+  //   router.push("/signup");
+  //   return null;
+  // }
 
   if (isLoading || !data) {
     return (
@@ -72,7 +79,7 @@ export default function RecoveryPage() {
         className="w-full max-w-lg text-center"
       >
         <MotionHeading className="text-2xl text-red-500 mb-8">
-          Warning: do not loose this phrase!
+          Warning: Do Not Lose This Phrase!
         </MotionHeading>
         <motion.div
           initial={{ opacity: 0 }}

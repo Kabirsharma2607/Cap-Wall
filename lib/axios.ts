@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 // Create instance with timeout configurations
 const axiosInstance = axios.create({
   baseURL: "http://localhost:3000/api/v1",
-  // baseURL: "https://kabirsh.loca.lt/api/v1",
+  // baseURL: "https://plenty-pumas-report.loca.lt/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

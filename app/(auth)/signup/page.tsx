@@ -31,6 +31,7 @@ const Signup = () => {
         if (res.data.token) {
           localStorage.removeItem("token");
           localStorage.setItem("token", res.data.token);
+          sessionStorage.setItem("username", formObj.username);
           setUsername(formObj.username);
           toast.success(res.data.message);
 

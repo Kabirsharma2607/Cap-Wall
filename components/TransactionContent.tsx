@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
+import { useRouter } from "next/navigation";
 
 const TransactionContent = ({
   children,
@@ -11,6 +12,7 @@ const TransactionContent = ({
   title: string;
   description: string;
 }) => {
+  const router = useRouter();
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <Header />
@@ -29,12 +31,16 @@ const TransactionContent = ({
           </p>
 
           <div className="flex gap-4">
-            <Button className="bg-[#3F75E0] hover:bg-[#3F75E0]/90 px-8 py-3 text-lg">
+            <Button
+              className="bg-[#3F75E0] hover:bg-[#3F75E0]/90 px-8 py-3 text-lg"
+              onClick={() => router.push("/tutorial")}
+            >
               Get Started
             </Button>
             <Button
               variant="outline"
               className="border-[#3F75E0] text-[#3F75E0] px-8 py-3 text-lg"
+              onClick={() => router.push("/about")}
             >
               Know More
             </Button>
