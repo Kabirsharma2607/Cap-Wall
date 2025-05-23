@@ -14,15 +14,12 @@ const getAuthToken = () => {
 const fetcher = async (url: string) => {
   const token = getAuthToken();
 
-  console.log(token, "token in fetcher");
-
   try {
     const response = await axios.get(`${BASE_URL}${url}`, {
       headers: {
         Authorization: token ? `Bearer ${token}` : "",
       },
     });
-    console.log(response, "response in fetcher");
     return response.data;
     //@ts-ignore
   } catch (e) {}

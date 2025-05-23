@@ -15,14 +15,19 @@ type AppContextType = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
-  const [username, setUsername] = useState("");
+  const [username, _setUsername] = useState("");
 
   useEffect(() => {
     const storedUsername = sessionStorage.getItem("username");
     if (storedUsername) {
-      setUsername(storedUsername);
+      _setUsername(storedUsername);
     }
   }, []);
+
+  const setUsername = (value: string) => {
+    _setUsername(value);
+    sessionStorage.setItem("username", value);
+  };
 
   // Wrap setter to update both state and sessionStorage
 

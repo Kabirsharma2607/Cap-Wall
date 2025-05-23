@@ -23,12 +23,27 @@ const Buy = () => {
   const [cryptoDialogOpen, setCryptoDialogOpen] = useState<boolean>(false);
   const [cryptoType, setCryptoType] = useState<WalletType | null>(null);
   const [amount, setAmount] = useState<string>("0");
+  const [maxAmount, setMaxAmount] = useState<string>("0");
+  const [error, setError] = useState<boolean>(false);
   const router = useRouter();
   const { username } = useAppContext();
 
   if (!username) {
     router.replace("/login");
   }
+
+  const getMaxAmount = (symbol: WalletType) => {
+    switch (symbol) {
+      case "PALO":
+        return "10.00";
+      case "BTC":
+        return "0.004";
+      case "SOL":
+        return "5.00";
+      case "ETH":
+        return "0.5";
+    }
+  };
 
   const { data, isLoading } = useConversionRates();
 
@@ -55,14 +70,26 @@ const Buy = () => {
     setCryptoDialogOpen(false);
   };
 
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+  const handleAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    symbol: WalletType
+  ) => {
+    const value = e.target.value;
+    const max = getMaxAmount(symbol);
+    setAmount(value);
+    setMaxAmount(max);
+
+    if (parseFloat(value) > parseFloat(maxAmount)) {
+      setError(true);
+    } else {
+      setError(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!cryptoType) return;
+    if (!cryptoType || error) return;
 
     const body: BuyCoinSchema = {
       walletType: cryptoType,
@@ -79,6 +106,12 @@ const Buy = () => {
     } else {
       toast.error("Transaction Failed");
     }
+  };
+
+  const handleMaxAmount = (symbol: WalletType) => {
+    const max = getMaxAmount(symbol);
+    setAmount(max);
+    setMaxAmount(max);
   };
 
   const selectedCryptoData =
@@ -197,15 +230,38 @@ const Buy = () => {
                     Amount of Crypto
                   </label>
                 </div>
-                <div className="relative">
-                  <Input
-                    name="amount"
-                    type="text"
-                    value={amount}
-                    onChange={handleAmountChange}
-                    className="w-full h-10 pr-16 bg-white"
-                  />
+                <div className="space-y-1">
+                  {/* Input with Max button */}
+                  <div className="relative">
+                    <Input
+                      name="amount"
+                      type="text"
+                      value={amount}
+                      onChange={(e) =>
+                        handleAmountChange(e, selectedCryptoData.walletType)
+                      }
+                      className="w-full h-10 pr-16 bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleMaxAmount(selectedCryptoData.walletType)
+                      }
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-100 text-[#3F75E0] px-2 py-1 rounded-md text-xs font-medium"
+                    >
+                      Max
+                    </button>
+                  </div>
+
+                  {/* Error message (placed outside of relative container to avoid layout shift) */}
+                  {error && (
+                    <span className="text-sm text-red-500 block">
+                      You can&apos;t buy more than {maxAmount}{" "}
+                      {selectedCryptoData.walletType}
+                    </span>
+                  )}
                 </div>
+
                 <span className="text-sm text-gray-500">
                   1 {selectedCryptoData.walletType}
                   {" = "}
@@ -215,10 +271,13 @@ const Buy = () => {
 
               <div className="mt-5 bg-[#3F75E0] text-white p-3 rounded-lg text-sm flex items-center justify-between">
                 <span>
-                  You will get {amount} {selectedCryptoData.walletType} for USD{" "}
+                  {/* You will get {amount} {selectedCryptoData.walletType} for USD{" "}
+                  {Number(selectedCryptoData.balance) * Number(amount)} */}
+                  {amount} {selectedCryptoData.walletType} = USD{" "}
                   {Number(selectedCryptoData.balance) * Number(amount)}
                 </span>
-                <svg
+
+                {/* <svg
                   width="16"
                   height="16"
                   viewBox="0 0 16 16"
@@ -229,7 +288,10 @@ const Buy = () => {
                     d="M8 0C3.6 0 0 3.6 0 8C0 12.4 3.6 16 8 16C12.4 16 16 12.4 16 8C16 3.6 12.4 0 8 0ZM9 12H7V7H9V12ZM8 6C7.4 6 7 5.6 7 5C7 4.4 7.4 4 8 4C8.6 4 9 4.4 9 5C9 5.6 8.6 6 8 6Z"
                     fill="white"
                   />
-                </svg>
+                </svg> */}
+                <button className=" bg-blue-100 text-[#3F75E0] text-sm rounded-md px-2">
+                  Pay Now
+                </button>
               </div>
 
               <div className="flex gap-3 mt-5">

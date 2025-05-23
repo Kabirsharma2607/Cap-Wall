@@ -23,9 +23,7 @@ const Signup = () => {
         username: formObj.username,
         password: formObj.password,
       };
-      console.log(body);
       const res = await axiosInstance.post("/auth/signup", body);
-      console.log(res);
 
       if (res.data.success) {
         if (res.data.token) {

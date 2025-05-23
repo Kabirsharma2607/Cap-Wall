@@ -23,7 +23,6 @@ export default function LoginPage() {
 
   const handleLoginCLicked = async (formObj: LoginForm) => {
     try {
-      console.log("handle login");
       const body: AuthSchemaType = {
         username: formObj.username,
         password: formObj.password,
@@ -44,7 +43,6 @@ export default function LoginPage() {
         toast.error("Login successful but no token received");
       }
     } catch (error) {
-      console.log(error);
       toast.error("Invalid credentials");
     }
   };
@@ -74,7 +72,6 @@ export default function LoginPage() {
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const formObj = Object.fromEntries(formData.entries());
-    console.log(formObj);
 
     const res = validateForm({
       username: formObj.username as string,

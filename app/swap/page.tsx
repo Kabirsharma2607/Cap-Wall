@@ -36,7 +36,7 @@ export default function SwapTokens() {
     if (!username) {
       router.replace("/login");
     }
-  }, [username]);
+  }, [username, router]);
 
   useEffect(() => {
     if (!data) {
