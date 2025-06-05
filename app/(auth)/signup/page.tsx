@@ -18,7 +18,6 @@ const Signup = () => {
 
   const handleSignupClicked = async (formObj: SignupForm) => {
     try {
-      console.log("handle signup");
       const body: AuthSchemaType = {
         username: formObj.username,
         password: formObj.password,
