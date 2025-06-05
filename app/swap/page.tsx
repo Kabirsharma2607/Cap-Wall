@@ -68,7 +68,6 @@ export default function SwapTokens() {
   }
 
   const handleSelectPayCrypto = (walletType: WalletType) => {
-    console.log("handle select pay crypto");
     const selected = data.balances.find(
       (crypto) => crypto.walletType === walletType
     );
@@ -82,7 +81,6 @@ export default function SwapTokens() {
   };
 
   const handleSelectReceiveCrypto = (walletType: WalletType) => {
-    console.log("handle receive crypto");
     const selected = data.balances.find(
       (crypto) => crypto.walletType === walletType
     );
@@ -103,7 +101,6 @@ export default function SwapTokens() {
         toWalletType: receiveCrypto,
       };
       const res = await axiosInstance.post("/wallet/swap-coin", body);
-      console.log(res);
       if (res.data.success) {
         toast.success("Transaction succesfull");
         setTimeout(() => {
@@ -112,8 +109,9 @@ export default function SwapTokens() {
       } else {
         toast.error("Transaction Failed");
       }
-      //@ts-ignore
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePayAmount = (e: string) => {

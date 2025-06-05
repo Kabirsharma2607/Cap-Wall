@@ -25,7 +25,6 @@ export default function SelectWalletPage() {
 
   const toggleWallet = useCallback(
     (walletType: WalletType) => {
-      console.log("toggleWallet called");
       setSelectedWallets((prevSelected) => {
         const isSelected = prevSelected.includes(walletType);
         return isSelected
@@ -38,7 +37,6 @@ export default function SelectWalletPage() {
 
   const handleButtonClick = useCallback(async () => {
     try {
-      console.log(selectedWallets);
       if (username) {
         axiosInstance.patch(`/auth/update-user-state/${username}`);
       }
@@ -48,28 +46,25 @@ export default function SelectWalletPage() {
       if (res.data.success) {
         router.push(res.data.deeplink);
       }
-      //@ts-ignore
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   }, [router, selectedWallets, username]);
 
-  const getWalletName = useCallback(
-    (walletType: WalletType) => {
-      console.log(data?.data);
-      switch (walletType) {
-        case "SOL":
-          return "Solana";
-        case "ETH":
-          return "Ethereum";
-        case "PALO":
-          return "Polkadot";
-        case "BTC":
-          return "Bitcoin";
-        default:
-          return "Unknown";
-      }
-    },
-    [data]
-  );
+  const getWalletName = useCallback((walletType: WalletType) => {
+    switch (walletType) {
+      case "SOL":
+        return "Solana";
+      case "ETH":
+        return "Ethereum";
+      case "PALO":
+        return "Polkadot";
+      case "BTC":
+        return "Bitcoin";
+      default:
+        return "Unknown";
+    }
+  }, []);
 
   if (isLoading || !data || isValidating) {
     return (

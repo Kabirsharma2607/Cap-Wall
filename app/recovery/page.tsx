@@ -15,8 +15,6 @@ export default function RecoveryPage() {
   const router = useRouter();
   const { username } = useAppContext();
 
-  console.log("username in recovery", username);
-
   if (!username) {
     router.replace("/login");
   }
@@ -39,7 +37,6 @@ export default function RecoveryPage() {
         if (res.data.success) {
           setTimeout(() => router.push("/select-wallet"), 2000);
         }
-        //@ts-ignore
       } catch (e) {
         toast.error("Failed to update user state");
       }

@@ -21,8 +21,9 @@ const fetcher = async (url: string) => {
       },
     });
     return response.data;
-    //@ts-ignore
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export default fetcher;

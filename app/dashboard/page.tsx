@@ -80,8 +80,6 @@ export default function Dashboard() {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="flex flex-col min-h-screen bg-white overflow-hidden">
       {/* Header */}

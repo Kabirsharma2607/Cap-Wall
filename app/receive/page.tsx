@@ -41,8 +41,6 @@ export default function CryptoReceive() {
     );
   }
 
-  console.log(data);
-
   const handleSelectCrypto = (symbol: WalletType) => {
     setSelectedCrypto(symbol);
     setCryptoDialogOpen(false);

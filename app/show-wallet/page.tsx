@@ -8,7 +8,6 @@ import Image from "next/image";
 import "./cardcontainer.css"; // Import your CSS file for card styles
 import { useWallets } from "@/lib/swr";
 import { walletMetaDataMap } from "@/constants/constant";
-import { WalletType } from "../types";
 import { twMerge } from "tailwind-merge";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
@@ -38,8 +37,6 @@ export default function WalletKeysPage() {
       </div>
     );
   }
-
-  console.log(data);
 
   const toggleFlip = (index: number) => {
     if (flippedCards.includes(index)) {
@@ -76,8 +73,6 @@ export default function WalletKeysPage() {
     });
     router.push(data?.deeplink ?? "/");
   };
-
-  console.log(walletMetaDataMap[WalletType.SOL]);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">

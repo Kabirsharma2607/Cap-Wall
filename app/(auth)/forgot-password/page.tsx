@@ -115,9 +115,7 @@ export default function ForgotPasswordPage() {
       } else {
         alert("Password reset failed");
       }
-      console.log(body);
     } catch (error) {
-      console.log(error);
       alert("Failed to reset password. Please check your details.");
     }
   };
